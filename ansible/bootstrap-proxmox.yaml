@@ -1,0 +1,7 @@
+---
+# Run `ansible-playbook -i <<host IP>>, -u <<username>> -k bootstrap.yaml`
+- hosts: all
+  vars:
+    - username: ansible
+  roles:
+    - {role: bootstrap-proxmox}

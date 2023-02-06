@@ -1,0 +1,23 @@
+- name: Create user {{ username }}
+  user:
+    name: "{{ username }}"
+    state: present
+    shell: /bin/bash
+  become: true
+- name: Add key for {{ username }}
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  become: true
+- name: Run script on new Proxmox host for automation account creation
+  ansible.builtin.script: files/create-automation-account.sh {{ username }}
+- name: Run script on new Proxmox host for cloud-init template creation
+  ansible.builtin.script: files/create-cloud-init-template.sh "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" ubuntu-2204 9001
+- name: Create snippets directory
+  ansible.builtin.file:
+    path: /var/lib/vz/snippets
+    state: directory
+- name: Copy cloud-init file to Proxmox
+  ansible.builtin.copy:
+    src: ../../../cloud-init/base-template.yaml
+    dest: /var/lib/vz/snippets/base-template.yaml

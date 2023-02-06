@@ -1,0 +1,19 @@
+- name: Create user {{ username }}
+  user:
+    name: "{{ username }}"
+    state: present
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+  become: true
+- name: Add key for {{ username }}
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+- name: Add new user to sudoers list
+  lineinfile:
+    dest: /etc/sudoers
+    regex: "{{ username }} ALL"
+    line: "{{ username }}	ALL=(ALL) 	NOPASSWD: ALL"
+    state: present
+  become: true
