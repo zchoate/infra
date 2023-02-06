@@ -3,5 +3,6 @@
 - hosts: all
   vars:
     - username: ansible
+    - public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDN9ge5JLcFuX062u6codiozD0LG089HEA858m3qcKVVHjK/vTLk//Ds4AMJLH2o3tCTzgZSXKiAtFHXHg95GYmx8rnC/jO0We3+ATBJYtBKnPnULHaElKiUPFDF28DI2gl6NCQOZwGA2Uab5Cd1fDT8mkcc8uZze7ojTc58xudizzTLXK/b9PMHrTrUax2qk2PcrfjL8JIyNM0mdWroyXuZ+AFKoyg4+7y6uVciTb8tNwLD74Q5+5v9K/OiCwqzzWlx1esM4aobU1DWEqyCDRCujJtDqODtxsuvG+SYmavyKjgtVuIqyaCVSuQQPz+g0vuTsbXDWeWhIOFpSexsKbR0L212uVTcSk2OrQXpssJnEXmQznCkoB16e2DY+uMIYfjqVHXX0t5Ai8v+VLdpDaIUY/ZQUeExv5GEL27fhsUoj69wgIi2n25jmk6WPRnbVcTACqDyJWQsb/fAtNUNNU2kN7V/an+D660I6CsjE69bVtmxhRzf02wRA0G1ycZMq0=
   roles:
     - {role: bootstrap-proxmox}

@@ -7,7 +7,7 @@
 - name: Add key for {{ username }}
   authorized_key:
     user: "{{ username }}"
-    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    key: "{{ public_key }}"
   become: true
 - name: Run script on new Proxmox host for automation account creation
   ansible.builtin.script: files/create-automation-account.sh {{ username }}

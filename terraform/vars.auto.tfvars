@@ -10,6 +10,6 @@ servers = {
         ip              = "192.168.8.41"
         ip_mask         = "24"
         ip_nameservers  = "1.1.1.1,8.8.8.8"
-        cloud_init_file = "base_init.yaml"
+        cloud_init_file = "base-template.yaml"
     }
 }
