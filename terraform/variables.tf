@@ -1,2 +1,2 @@
-variable "cloud_init_servers" {}
+variable "servers" {}
 variable "base_vm" {}

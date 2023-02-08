@@ -11,5 +11,6 @@ servers = {
         ip_mask         = "24"
         ip_nameservers  = "1.1.1.1,8.8.8.8"
         cloud_init_file = "base-template.yaml"
+        ansible_groups  = ["kubernetes"]
     }
 }
