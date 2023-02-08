@@ -14,5 +14,7 @@ My home lab infra repo. Keeping it public to keep me honest and prevent shortcut
 
 ### Terraform
 - Create servers and update inventory file
-    - TODO:
-        - [ ] Get inventory file to the appropriate location
+
+### TODO:
+- [ ] Get inventory file to the appropriate location
+- [ ] CI/CD...probably actions for the Terraform, not sure for ansible...probably manual/cron for now
