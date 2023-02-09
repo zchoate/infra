@@ -1,0 +1,38 @@
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /home/zach/ha-config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2477395-if00:/dev/ttyS0
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+  omada-controller:
+    container_name: omada-controller
+    build:
+      context: /home/zach/omada-controller/.
+      args:
+        BASE: ubuntu:20.04
+        ARCH: amd64
+    env_file: omada.env
+    network_mode: host
+    volumes:
+      - /home/zach/data/omada/data:/opt/tplink/EAPController/data
+      - /home/zach/data/omada/work:/opt/tplink/EAPController/work
+      - /home/zach/data/omada/logs:/opt/tplink/EAPController/logs
+    restart: unless-stopped
+  dns:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - 53:53
+      - 53:53/udp
+      - 80:80
+    env_file: pihole.env
+    volumes:
+      - /home/zach/data/pihole/pihole:/etc/pihole
+      - /home/zach/data/pihole/dnsmasq.d:/etc/dnsmasq.d
+    restart: unless-stopped
