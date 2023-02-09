@@ -8,6 +8,12 @@ My home lab infra repo. Keeping it public to keep me honest and prevent shortcut
     - new-user
         - Create a new user on a machine and add a key
 
+### Docker-Compose
+- Network Services (core services required for life)
+    - Home Assistant
+    - Omada Wireless controller (based on https://github.com/mbentley/docker-omada-controller)
+    - PiHole/DNS
+
 ### Cloud-Init
 - base-template.yaml
     - Base cloud init template to add keys, users, and get the Qemu agent installed for Proxmox
