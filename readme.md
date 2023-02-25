@@ -10,9 +10,11 @@ My home lab infra repo. Keeping it public to keep me honest and prevent shortcut
 
 ### Docker-Compose
 - Network Services (core services required for life)
+    - Traefik
     - Home Assistant
     - Omada Wireless controller (based on https://github.com/mbentley/docker-omada-controller)
     - PiHole/DNS
+- Paperless
 
 ### Cloud-Init
 - base-template.yaml
