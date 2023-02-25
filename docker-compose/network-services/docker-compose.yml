@@ -1,5 +1,36 @@
 version: '3'
 services:
+  proxy:
+    image: traefik:latest
+    container_name: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/zach/data/traefik/certs:/letsencrypt
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=network-services_backend
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.cn.acme.dnschallenge=true
+      - --certificatesresolvers.cn.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cn.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.cn.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.cn.acme.dnschallenge.resolvers=1.1.1.1:53
+    labels:
+      - traefik.http.routers.redirs.entrypoints=web
+      - traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)
+      - traefik.http.routers.redirs.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+    env_file: traefik.env
+    ports:
+      - 443:443
+      - 80:80
+    dns:
+      - 1.1.1.1
+    networks:
+      - default
+      - backend
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
@@ -30,9 +61,13 @@ services:
     ports:
       - 53:53
       - 53:53/udp
-      - 80:80
+      - 8080:80
     env_file: pihole.env
     volumes:
       - /home/zach/data/pihole/pihole:/etc/pihole
       - /home/zach/data/pihole/dnsmasq.d:/etc/dnsmasq.d
     restart: unless-stopped
+
+networks:
+  default:
+  backend:
