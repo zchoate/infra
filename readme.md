@@ -7,6 +7,10 @@ My home lab infra repo. Keeping it public to keep me honest and prevent shortcut
         - Create a template VM in Proxmox
     - new-user
         - Create a new user on a machine and add a key
+    - container-host
+        - Install docker, docker-compose
+    - deb-updates
+        - Run updates and reboot if required
 
 ### Docker-Compose
 - Network Services (core services required for life)
@@ -21,8 +25,4 @@ My home lab infra repo. Keeping it public to keep me honest and prevent shortcut
     - Base cloud init template to add keys, users, and get the Qemu agent installed for Proxmox
 
 ### Terraform
-- Create servers and update inventory file
-
-### TODO:
-- [ ] Get inventory file to the appropriate location
-- [ ] CI/CD...probably actions for the Terraform, not sure for ansible...probably manual/cron for now
+- Create servers on proxmox and update host inventory (ansible/pve-guests.yaml)

@@ -1,8 +1,0 @@
-all:
-  children:
-    kubernetes:
-      hosts:
-%{ for server in kubernetes_hosts ~}
-        ${server.name}:
-          ansible_host: ${server.ip}
-%{ endfor ~}

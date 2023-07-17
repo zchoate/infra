@@ -1,18 +1,16 @@
-- name: Create user {{ username }}
+- name: Create ansible user
   user:
-    name: "{{ username }}"
+    name: ansible
     state: present
     shell: /bin/bash
-  become: true
-- name: Add key for {{ username }}
+- name: Add key for ansible
   authorized_key:
-    user: "{{ username }}"
-    key: "{{ public_key }}"
-  become: true
+    user: ansible
+    key: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
 - name: Run script on new Proxmox host for automation account creation
-  ansible.builtin.script: files/create-automation-account.sh {{ username }}
+  ansible.builtin.script: files/create-automation-account.sh ansible
 - name: Run script on new Proxmox host for cloud-init template creation
-  ansible.builtin.script: files/create-cloud-init-template.sh "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" ubuntu-2204 9001
+  ansible.builtin.script: files/create-cloud-init-template.sh "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" ubuntu-2204 9000 {{ storage_pool_name }}
 - name: Create snippets directory
   ansible.builtin.file:
     path: /var/lib/vz/snippets

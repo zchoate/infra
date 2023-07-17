@@ -1,0 +1,7 @@
+all:
+  children:
+    proxmox:
+      hosts:
+        chpve02.home.choate.network:
+          storage_pool_name: local-zfs
+          ansible_ssh_user: ansible

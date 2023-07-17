@@ -1,0 +1,7 @@
+---
+# Run `ansible-playbook -i <<host IP>>, -u <<username>> -k bootstrap-proxmox.yaml`
+- hosts: all
+  vars:
+    - storage_pool_name: local-zfs
+  roles:
+    - role: bootstrap-proxmox

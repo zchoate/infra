@@ -1,0 +1,22 @@
+# https://www.jeffgeerling.com/blog/2022/ansible-playbook-upgrade-ubuntudebian-servers-and-reboot-if-needed
+- name: Run updates
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: true
+  become: true
+
+- name: Check reboot
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+    get_md5: no
+  register: reboot_required_file
+
+- name: Reboot server
+  ansible.builtin.reboot:
+  when: reboot_required_file.stat.exists == true
+  become: true
+
+- name: Cleanup
+  ansible.builtin.apt:
+    autoremove: yes
+  become: true
