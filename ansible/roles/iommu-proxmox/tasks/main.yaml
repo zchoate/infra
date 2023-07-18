@@ -1,0 +1,20 @@
+- name: IOMMU Kernel Commandline
+  ansible.builtin.template:
+    src: templates/etc-kernel-cmdline.j2
+    dest: /etc/kernel/cmdline
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+  - Update initramfs
+  - Restart proxmox
+- name: IOMMU Modules
+  ansible.builtin.template:
+    src: templates/etc-modules.j2
+    dest: /etc/modules
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+  - Update initramfs
+  - Restart proxmox

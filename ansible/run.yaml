@@ -2,6 +2,7 @@
 - hosts: proxmox
   roles:
     - role: bootstrap-proxmox
+    - role: iommu-proxmox
 - hosts: container_host
   roles:
     - role: container-host

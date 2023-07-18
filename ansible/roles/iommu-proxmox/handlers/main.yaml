@@ -1,0 +1,4 @@
+- name: Update initramfs
+  ansible.builtin.shell: update-initramfs -u -k all
+- name: Restart proxmox
+  ansible.builtin.reboot:
