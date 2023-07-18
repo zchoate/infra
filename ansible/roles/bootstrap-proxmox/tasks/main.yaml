@@ -1,14 +1,3 @@
-- name: Create ansible user
-  user:
-    name: ansible
-    state: present
-    shell: /bin/bash
-- name: Add key for ansible
-  authorized_key:
-    user: ansible
-    key: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
-- name: Run script on new Proxmox host for automation account creation
-  ansible.builtin.script: files/create-automation-account.sh ansible
 - name: Run script on new Proxmox host for cloud-init template creation
   ansible.builtin.script: files/create-cloud-init-template.sh "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" ubuntu-2204 9000 {{ storage_pool_name }}
 - name: Create snippets directory

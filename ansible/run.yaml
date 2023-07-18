@@ -1,7 +1,7 @@
 ---
-# - hosts: proxmox
-#   roles:
-#     - role: bootstrap-proxmox
+- hosts: proxmox
+  roles:
+    - role: bootstrap-proxmox
 - hosts: container_host
   roles:
     - role: container-host
