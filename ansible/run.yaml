@@ -3,6 +3,7 @@
   roles:
     - role: bootstrap-proxmox
     - role: iommu-proxmox
+    - role: ironicbadger.proxmox_nag_removal
 - hosts: container_host
   roles:
     - role: container-host
