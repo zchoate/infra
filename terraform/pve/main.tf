@@ -46,5 +46,8 @@ resource "ansible_host" "servers" {
         ansible_host                    = each.value.ip,
         ansible_ssh_private_key_file    = "~/.ssh/id_rsa",
         ansible_python_interpreter      = "/usr/bin/python3",
+        docker_user                     = "zach",
+        second_disk_path                = each.value.disks[1] != null ? "/dev/vdb" : null,
+        hostname                        = each.value.name
     }
 }

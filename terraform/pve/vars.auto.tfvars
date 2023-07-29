@@ -15,12 +15,12 @@ servers = {
             1 = {
                 storage = "datapool"
                 type    = "virtio"
-                size    = "120G"
+                size    = "240G"
                 slot    = 1
             }
         }
         disk_size       = "20G"
-        data_disk       = "120G"
+        data_disk       = "240G"
         ip_gw           = "192.168.8.1"
         ip              = "192.168.8.41"
         ip_mask         = "24"

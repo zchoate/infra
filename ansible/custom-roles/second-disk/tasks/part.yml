@@ -1,0 +1,26 @@
+- name: Create partition
+  community.general.parted:
+    name: data
+    label: gpt
+    device: "{{ second_disk_path }}"
+    number: 1
+    state: present
+    part_start: 1MiB
+  become: true
+- name: Create filesystem
+  community.general.filesystem:
+    dev: "{{ second_disk_path }}1"
+    fstype: xfs
+  become: true
+- name: Create data directory
+  ansible.builtin.file:
+    path: /data
+    state: directory
+  become: true
+- name: Mount partition
+  ansible.posix.mount:
+    path: /data
+    src: "{{ second_disk_path }}1"
+    fstype: xfs
+    state: mounted
+  become: true

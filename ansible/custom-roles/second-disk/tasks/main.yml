@@ -1,0 +1,4 @@
+- name: Create LVM partition
+  include_tasks:
+    file: part.yml
+  when: second_disk_path

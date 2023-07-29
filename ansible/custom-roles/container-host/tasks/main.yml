@@ -8,3 +8,11 @@
     state: latest
     update_cache: yes
   become: true
+- name: Add user to Docker Users
+  user:
+    name: "{{ docker_user }}"
+    state: present
+    shell: /bin/bash
+    groups: sudo,docker
+    append: yes
+  become: true
