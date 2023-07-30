@@ -10,6 +10,8 @@ resource "proxmox_vm_qemu" "servers" {
 
     boot        = "cd"
 
+    memory      = each.value.memory_mb
+
     dynamic "disk" {
         for_each = each.value.disks
 

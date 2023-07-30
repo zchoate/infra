@@ -19,6 +19,7 @@ servers = {
                 slot    = 1
             }
         }
+        memory_mb       = 512
         disk_size       = "20G"
         mount_second_disk = true
         ip_gw           = "192.168.8.1"
@@ -46,6 +47,7 @@ servers = {
                 slot    = 1
             }
         }
+        memory_mb       = 2048
         disk_size       = "50G"
         mount_second_disk = true
         ip_gw           = "192.168.8.1"
@@ -67,6 +69,7 @@ servers = {
                 slot    = 0
             }
         }
+        memory_mb       = 512
         disk_size       = "80G"
         mount_second_disk = false
         ip_gw           = "192.168.8.1"
