@@ -47,7 +47,14 @@ resource "ansible_host" "servers" {
         ansible_ssh_private_key_file    = "~/.ssh/id_rsa",
         ansible_python_interpreter      = "/usr/bin/python3",
         docker_user                     = "zach",
-        second_disk_path                = each.value.disks[1] != null ? "/dev/vdb" : null,
+        second_disk_path                = each.value.mount_second_disk ? "/dev/vdb" : null,
         hostname                        = each.value.name
     }
+}
+
+resource "pihole_dns_record" "servers" {
+    for_each    = var.servers
+
+    domain      = "${each.value.name}.${var.local_domain}"
+    ip          = each.value.ip
 }
