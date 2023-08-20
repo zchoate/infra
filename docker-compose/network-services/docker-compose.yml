@@ -7,11 +7,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /home/zach/data/traefik/certs:/letsencrypt
     command:
+      - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=network-services_backend
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
+      - --entrypoints.influx.address=:8086
       - --certificatesresolvers.cn.acme.dnschallenge=true
       - --certificatesresolvers.cn.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.cn.acme.email=${ACME_EMAIL}
@@ -26,11 +28,16 @@ services:
     ports:
       - 443:443
       - 80:80
+      - 8080:8080
+      - 8086:8086
     dns:
       - 1.1.1.1
     networks:
       - default
       - backend
+    # this makes HA work with Traefik with host network mode
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
@@ -41,6 +48,14 @@ services:
     restart: unless-stopped
     privileged: true
     network_mode: host
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ha.rule=Host(`${HA_HOSTNAME}`)
+      - traefik.http.routers.ha.entrypoints=websecure
+      - traefik.http.routers.ha.tls=true
+      - traefik.http.routers.ha.tls.certresolver=cn
+      - traefik.http.routers.ha.service=ha
+      - traefik.http.services.ha.loadbalancer.server.port=8123
   omada-controller:
     container_name: omada-controller
     build:
@@ -61,12 +76,26 @@ services:
     ports:
       - 53:53
       - 53:53/udp
-      - 8080:80
     env_file: pihole.env
     volumes:
       - /home/zach/data/pihole/pihole:/etc/pihole
       - /home/zach/data/pihole/dnsmasq.d:/etc/dnsmasq.d
     restart: unless-stopped
+    networks:
+      - default
+      - backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pihole.rule=Host(`${PIHOLE_HOSTNAME}`)
+      - traefik.http.routers.pihole.entrypoints=websecure
+      - traefik.http.routers.pihole.tls=true
+      - traefik.http.routers.pihole.tls.certresolver=cn
+      - traefik.http.routers.pihole.service=pihole
+      - traefik.http.services.pihole.loadbalancer.server.port=80
+      - traefik.http.routers.pihole_http.rule=Host(`${PIHOLE_HOSTNAME}`)
+      - treafik.http.routers.pihole_http.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.pihole_http.entrypoints=web
 
 networks:
   default:

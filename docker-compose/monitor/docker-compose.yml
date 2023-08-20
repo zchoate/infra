@@ -1,0 +1,51 @@
+version: "3.7"
+
+services:
+  influx:
+    container_name: influx
+    image: influxdb:2.7
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /home/zach/data/influx/data
+        target: /var/lib/influxdb2
+        bind:
+          create_host_path: true
+    env_file: .env
+    networks:
+      - monitor
+      - network-services_backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.influx.rule=Host(`${INFLUX_HOSTNAME}`)
+      - traefik.http.routers.influx.entrypoints=influx
+      - traefik.http.routers.influx.tls=true
+      - traefik.http.routers.influx.tls.certresolver=cn
+      - traefik.http.routers.influx.service=influx
+      - traefik.http.services.influx.loadbalancer.server.port=8086
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss
+    restart: unless-stopped
+    user: '1000'
+    volumes:
+      - type: bind
+        source: /home/zach/data/grafana/data
+        target: /var/lib/grafana
+        bind:
+          create_host_path: true
+    env_file: .env
+    networks:
+      - monitor
+      - network-services_backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=Host(`${GRAFANA_HOSTNAME}`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.tls=true
+      - traefik.http.routers.grafana.tls.certresolver=cn
+
+networks:
+  monitor:
+  network-services_backend:
+    external: true

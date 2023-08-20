@@ -1,0 +1,16 @@
+version: '3'
+services:
+  tailscale:
+      privileged: true
+      hostname: ${TAILSCALE_HOST}
+      network_mode: "host"
+      container_name: tailscale
+      image: tailscale/tailscale:latest
+      volumes:
+          - /home/zach/data/tailscale/lib:/var/lib
+          - /dev/net/tun:/dev/net/tun
+      cap_add:
+        - net_admin
+        - sys_module
+      restart: unless-stopped
+      env_file: .env
