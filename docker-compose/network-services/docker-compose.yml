@@ -8,7 +8,7 @@ services:
       - /home/zach/data/traefik/certs:/letsencrypt
     command:
       - --api.insecure=true
-      - --accesslog=true
+      # - --accesslog=true
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=network-services_backend
