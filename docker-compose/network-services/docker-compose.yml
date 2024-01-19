@@ -8,6 +8,7 @@ services:
       - /home/zach/data/traefik/certs:/letsencrypt
     command:
       - --api.insecure=true
+      - --accesslog=true
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=network-services_backend
@@ -41,10 +42,12 @@ services:
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
+    # bluetooth support requires dbus mapped, bluez installed on host system, dbus-broker installed on host
     volumes:
       - /home/zach/ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2477395-if00:/dev/ttyS0
+      - /run/dbus:/run/dbus:ro
     restart: unless-stopped
     privileged: true
     network_mode: host
@@ -56,6 +59,25 @@ services:
       - traefik.http.routers.ha.tls.certresolver=cn
       - traefik.http.routers.ha.service=ha
       - traefik.http.services.ha.loadbalancer.server.port=8123
+  scrypted:
+    container_name: scrypted
+    image: ghcr.io/koush/scrypted
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /home/zach/data/scrypted/volume:/server/volume
+    environment:
+      - SCRYPTED_DOCKER_AVAHI=true
+      - SCRYPTED_INSECURE_PORT=11080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.scrypted.rule=Host(`${NVR_HOSTNAME}`)
+      - traefik.http.routers.scrypted.entrypoints=websecure
+      - traefik.http.routers.scrypted.tls=true
+      - traefik.http.routers.scrypted.tls.certresolver=cn
+      - traefik.http.routers.scrypted.service=scrypted
+      - traefik.http.services.scrypted.loadbalancer.server.port=11080
   omada-controller:
     container_name: omada-controller
     build:
