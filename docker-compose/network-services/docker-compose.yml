@@ -59,6 +59,16 @@ services:
       - traefik.http.routers.ha.tls.certresolver=cn
       - traefik.http.routers.ha.service=ha
       - traefik.http.services.ha.loadbalancer.server.port=8123
+  esphome:
+    container_name: esphome
+    image: ghcr.io/esphome/esphome:stable
+    volumes:
+      - /home/zach/data/esphome/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    env_file: esphome.env
   scrypted:
     container_name: scrypted
     image: ghcr.io/koush/scrypted
@@ -106,6 +116,8 @@ services:
     networks:
       - default
       - backend
+    dns:
+      - 1.1.1.1
     labels:
       - traefik.enable=true
       - traefik.http.routers.pihole.rule=Host(`${PIHOLE_HOSTNAME}`)
